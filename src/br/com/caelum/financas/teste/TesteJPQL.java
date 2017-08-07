@@ -3,8 +3,8 @@ package br.com.caelum.financas.teste;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
+import br.com.caelum.financas.dao.MovimentacaoDAO;
 import br.com.caelum.financas.modelo.Conta;
 import br.com.caelum.financas.modelo.Movimentacao;
 import br.com.caelum.financas.modelo.TipoMovimentacao;
@@ -20,14 +20,10 @@ public class TesteJPQL {
 		Conta conta = new Conta();
 		conta.setId(2);
 
-		String jpql = "select m from Movimentacao m where m.conta = :pConta" +
-		" and m.tipo = :pTipo" + 
-		" order by m.valor desc";
-		Query query = em.createQuery(jpql);
-		query.setParameter("pConta", conta);
-		query.setParameter("pTipo", TipoMovimentacao.SAIDA);
 		
-		List<Movimentacao> resultList = query.getResultList();
+		
+		MovimentacaoDAO dao = new MovimentacaoDAO(em);
+		List<Movimentacao> resultList = dao.getMovimentacoesPorTipo(TipoMovimentacao.SAIDA, conta);
 		
 		for (Movimentacao movimentacao : resultList) {
 			System.out.println("Descricao: " + movimentacao.getDescricao());
